@@ -45,12 +45,6 @@ const (
 	TypeAllStarred
 )
 
-type urlMimeTypeExt struct {
-	ext      string
-	mimeType string
-	url      string
-}
-
 type downloadArg struct {
 	id              string
 	path            string
@@ -677,9 +671,9 @@ func (g *Commands) export(f *File, destAbsPath string, exports []string) (manife
 		}
 
 		waitables = append(waitables, &urlMimeTypeExt{
-			mimeType: mimeType,
-			url:      exportURL,
-			ext:      ext,
+			MimeType: mimeType,
+			URL:      exportURL,
+			Ext:      ext,
 		})
 	}
 
@@ -697,23 +691,13 @@ func (g *Commands) export(f *File, destAbsPath string, exports []string) (manife
 				errsChan <- err
 			}()
 
-			exportPath := sepJoin(".", baseDirPath, urlMExt.ext)
-
-			// TODO: Decide if users should get to make *.desktop users even for exports
-			if runtime.GOOS == OSLinuxKey && false {
-				desktopEntryPath := sepJoin(".", exportPath, DesktopExtension)
-
-				_, dentErr := f.serializeAsDesktopEntry(desktopEntryPath, urlMExt)
-				if dentErr != nil {
-					g.log.LogErrf("desktopEntry: %s %v\n", desktopEntryPath, dentErr)
-				}
-			}
+			exportPath := sepJoin(".", baseDirPath, urlMExt.Ext)
 
 			dlArg := downloadArg{
 				ackByteProgress: false,
 				path:            exportPath,
 				id:              id,
-				exportURL:       urlMExt.url,
+				exportURL:       urlMExt.URL,
 			}
 
 			err = g.singleDownload(&dlArg)
@@ -768,18 +752,8 @@ func (g *Commands) download(change *Change, exports []string) error {
 	// For our kin that need .desktop files
 	if g.shouldCreateURLLinkedFiles() {
 		f := change.Src
-
-		urlMExt := urlMimeTypeExt{
-			url:      f.AlternateLink,
-			ext:      "",
-			mimeType: f.MimeType,
-		}
-
-		desktopEntryPath := sepJoin(".", destAbsPath, DesktopExtension)
-
-		_, dentErr := f.serializeAsDesktopEntry(desktopEntryPath, &urlMExt)
-		if dentErr != nil {
-			g.log.LogErrf("desktopEntry: %s %v\n", desktopEntryPath, dentErr)
+		if _, err := f.ToDesktopEntry(destAbsPath); err != nil {
+			g.log.LogErrf("[desktopEntry]: %s err: %v\n", destAbsPath, err)
 		}
 	}
 

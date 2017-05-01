@@ -274,10 +274,6 @@ const (
 )
 
 const (
-	DesktopExtension = "desktop"
-)
-
-const (
 	InfiniteDepth = -1
 )
 

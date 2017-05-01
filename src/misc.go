@@ -340,44 +340,27 @@ func promptForChanges(args ...interface{}) Agreement {
 	return Rejected
 }
 
+type urlMimeTypeExt struct {
+	Ext      string `json:"ext,omitempty"`
+	MimeType string `json:"mimeType,omitempty"`
+	URL      string `json:"url,omitempty"`
+}
+
 func (f *File) toDesktopEntry(urlMExt *urlMimeTypeExt) *desktopEntry {
 	name := f.Name
-	if urlMExt.ext != "" {
-		name = sepJoin("-", f.Name, urlMExt.ext)
+	if urlMExt.Ext != "" {
+		name = sepJoin("-", f.Name, urlMExt.Ext)
 	}
 	return &desktopEntry{
 		name: name,
-		url:  urlMExt.url,
-		icon: urlMExt.mimeType,
+		url:  urlMExt.URL,
+		icon: urlMExt.MimeType,
 	}
 }
 
-func (f *File) serializeAsDesktopEntry(destPath string, urlMExt *urlMimeTypeExt) (int, error) {
-	deskEnt := f.toDesktopEntry(urlMExt)
-	handle, err := os.Create(destPath)
-	if err != nil {
-		return 0, err
-	}
-
-	defer func() {
-		handle.Close()
-		chmodErr := os.Chmod(destPath, 0755)
-
-		if chmodErr != nil {
-			fmt.Fprintf(os.Stderr, "%s: [desktopEntry]::chmod %v\n", destPath, chmodErr)
-		}
-
-		chTimeErr := os.Chtimes(destPath, f.ModTime, f.ModTime)
-		if chTimeErr != nil {
-			fmt.Fprintf(os.Stderr, "%s: [desktopEntry]::chtime %v\n", destPath, chTimeErr)
-		}
-	}()
-
-	icon := strings.Replace(deskEnt.icon, UnescapedPathSep, MimeTypeJoiner, -1)
-
-	return fmt.Fprintf(handle, "[Desktop Entry]\nIcon=%s\nName=%s\nType=%s\nURL=%s\n",
-		icon, deskEnt.name, LinkKey, deskEnt.url)
-}
+const (
+	DesktopExtension = "desktop"
+)
 
 func remotePathSplit(p string) (dir, base string) {
 	// Avoiding use of filepath.Split because of bug with trailing "/" not being stripped

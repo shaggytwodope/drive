@@ -15,6 +15,7 @@
 package drive
 
 import (
+	"bytes"
 	"fmt"
 	"reflect"
 	"runtime"
@@ -458,6 +459,46 @@ func TestCrudToAtoi(t *testing.T) {
 	for _, tc := range testCases {
 		if got, want := CrudAtoi(tc.specimen...), tc.want; got != want {
 			t.Errorf("given specimen %v, expected %q instead got %q", tc.specimen, want, got)
+		}
+	}
+}
+
+func TestDesktopEntries(t *testing.T) {
+	tests := [...]struct {
+		file           *File
+		wantSerialized map[string]string
+	}{
+		0: {
+			file: &File{
+				Name:     "test-prez",
+				MimeType: "application/vnd.ms-powerpoint",
+
+				AlternateLink: "https://docs.google.com/presentation/d/1yLLB396IiGMLEK8WxWqNyRiMXO6H6PLYKUc5vXi9vnE",
+			},
+			wantSerialized: map[string]string{
+				"windows": `{"mimeType":"application/vnd.ms-powerpoint","url":"https://docs.google.com/presentation/d/1yLLB396IiGMLEK8WxWqNyRiMXO6H6PLYKUc5vXi9vnE"}`,
+				"darwin":  "[InternetShortcut]\nURL=https://docs.google.com/presentation/d/1yLLB396IiGMLEK8WxWqNyRiMXO6H6PLYKUc5vXi9vnE",
+				"linux":   "[Desktop Entry]\nIcon=application-vnd.ms-powerpoint\nName=test-prez\nType=Link\nURL=https://docs.google.com/presentation/d/1yLLB396IiGMLEK8WxWqNyRiMXO6H6PLYKUc5vXi9vnE",
+			},
+		},
+	}
+
+	for i, tt := range tests {
+		buf := new(bytes.Buffer)
+		n, err := tt.file.SerializeAsDesktopEntry(buf, "")
+		if n < 10 {
+			t.Errorf("#%d: n: %d", i, n)
+		}
+		if err != nil {
+			t.Errorf("#%d: err: %v", i, err)
+		}
+
+		got := buf.Bytes()
+
+		osSpecificWant := tt.wantSerialized[runtime.GOOS]
+		want := []byte(osSpecificWant)
+		if !bytes.Equal(want, got) {
+			t.Errorf("#%d\ngot:  %s\nwant: %s", i, got, want)
 		}
 	}
 }
