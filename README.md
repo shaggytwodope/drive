@@ -17,7 +17,7 @@
   - [Cross Compilation](#cross-compilation)
   - [API keys](#api-keys)
 - [Usage](#usage)
-  - [Hyphens: - vs --](#-vs--)
+  - [Hyphens: - vs --](#hyphens---vs---)
   - [Initializing](#initializing)
   - [De Initializing](#de-initializing)
   - [Traversal Depth](#traversal-depth)
@@ -25,7 +25,7 @@
   - [Excluding And Including Objects](#excluding-and-including-objects)
     - [Sample .driveignore with the exclude and include clauses combined](sample-.driveignore-with-the-exclude-and-include-clauses-combined)
   - [Pulling](#pulling)
-    - [Verifying Checksums] (#verifying-checksums)
+    - [Verifying Checksums](#verifying-checksums)
     - [Exporting Docs](#exporting-docs)
   - [Pushing](#pushing)
   - [Pulling And Pushing Notes](#pulling-and-pushing-notes)
@@ -75,7 +75,7 @@
 
 ### Requirements
 
-go 1.7.X or higher is required. See [here](https://golang.org/doc/install) for installation instructions and platform installers.
+go 1.9.X or higher is required. See [here](https://golang.org/doc/install) for installation instructions and platform installers.
 
 * Make sure to set your GOPATH in your env, .bashrc or .bash\_profile file. If you have not yet set it, you can do so like this:
 
@@ -142,8 +142,8 @@ Is your platform missing a package? Feel free to prepare / contribute an install
 
 #### Automation Scripts
 
-You can install scripts for automating major drive commands and syncing from [drive-google wiki](https://gitlab.com/jean-christophe-manciot/Drive/wikis/home), also described in [platform_packages.md](https://github.com/odeke-em/drive/blob/master/platform_packages.md)).
-Some screenshots are available [here](https://gitlab.com/jean-christophe-manciot/Drive/wikis/home#drive-menu-screenshots).
+You can install scripts for automating major drive commands and syncing from [drive-google wiki](https://gitlab.com/jean-christophe-manciot/Drive/wikis/Drive-Automation-Scripts:-Startup-Guide-and-Screenshots), also described in [platform_packages.md](https://github.com/odeke-em/drive/blob/master/platform_packages.md).
+Some screenshots are available [here](https://gitlab.com/jean-christophe-manciot/Drive/wikis/Drive-Automation-Scripts:-Startup-Guide-and-Screenshots#drive-menu-screenshots).
 
 ### Cross Compilation
 
@@ -167,7 +167,7 @@ Optionally set the `GOOGLE_API_CLIENT_ID` and `GOOGLE_API_CLIENT_SECRET` environ
 
 ### Hyphens: - vs --
 
-A single hypen `-` can be used to specify options. However two hypens `--` can be used with any options in the provided examples below.
+A single hyphen `-` can be used to specify options. However two hyphens `--` can be used with any options in the provided examples below.
 
 ### Initializing
 
@@ -185,7 +185,7 @@ drive init --service-account-file <gsa_json_file_path> ~/gdrive
 cd ~/gdrive
 ```
 
-where <gsa_json_file_path> must the GSA credentials in JSON form.
+Where <gsa_json_file_path> must be a [Google Service Account credentials](https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount) file in JSON form.
 This feature was implemented as requested by:
 + https://github.com/odeke-em/drive/issues/879
 
@@ -198,7 +198,7 @@ The opposite of `drive init`, it will remove your credentials locally as well as
 drive deinit [-no-prompt]
 ```
 
-For a complete deinit-ialization, don't forget to revoke account access, [please see revoking account access](#revoking-account-access)
+For a complete deinitialization, don't forget to revoke account access, [please see revoking account access](#revoking-account-access)
 
 ### Traversal Depth
 
@@ -665,7 +665,10 @@ drive push -retry-count 4 a/bc/def terms
 `-upload-chunk-size` whose value is in bytes. If you don't specify this flag, by default
 the internal Google APIs use a value of 8MiB from constant `googleapi.DefaultUploadChunkSize`.
 Please note that your value has to be a multiple of and atleast the minimum  upload chunksize
-of 256KiB from constant `googleapi.MinUploadChunkSize`. See https://godoc.org/google.golang.org/api/googleapi#pkg-constants
+of 256KiB from constant `googleapi.MinUploadChunkSize`. See https://godoc.org/google.golang.org/api/googleapi#pkg-constants.
+  If `-upload-chunk-size` is not set yet `-upload-rate-limit` is, `-upload-chunk-size` will be the same as `-upload-rate-limit`.
+
+* To limit the upload bandwidth, please set `-upload-rate-limit=n`. It's in `n` KiB/s, default is unlimited.
 
 ### End to End Encryption
 

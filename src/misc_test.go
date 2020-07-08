@@ -65,7 +65,7 @@ func TestRemoteOpToChangerTranslator(t *testing.T) {
 		vptr2 := reflect.ValueOf(tc.wantedFn).Pointer()
 
 		if vptr1 != vptr2 {
-			t.Errorf("expected %q expected (%v) got (%v)", tc.name, tc.wantedFn, got)
+			t.Errorf("expected %q expected (%p) got (%p)", tc.name, tc.wantedFn, got)
 		}
 	}
 }
@@ -115,7 +115,7 @@ func TestLocalOpToChangerTranslator(t *testing.T) {
 		vptr2 := reflect.ValueOf(tc.wantedFn).Pointer()
 
 		if vptr1 != vptr2 {
-			t.Errorf("expected %q expected (%v) got (%v)", tc.name, tc.wantedFn, got)
+			t.Errorf("expected %q expected (%p) got (%p)", tc.name, tc.wantedFn, got)
 		}
 	}
 }

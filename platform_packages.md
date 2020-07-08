@@ -5,9 +5,9 @@
 This includes Arch linux, Antergos, Manjaro, etc. [List](https://wiki.archlinux.org/index.php/Arch_based_distributions_(active))
 
 ```sh
-yaourt -S drive
+yay -S drive-bin
 ```
-Since drive is in the aur, you will need an aur helper such as yaourt above. If you are not fimilar with
+Since drive is in the aur, you will need an aur helper such as yay above. If you are not fimilar with
 a helper, you can find a list [here](https://wiki.archlinux.org/index.php/AUR_helpers#AUR_search.2Fbuild_helpers)
 
 ---
@@ -28,6 +28,24 @@ sudo apt-key update
 sudo apt-get update
 sudo apt-get install drive
 ```
+
+### Automation on the latest stable Debian distribution. 
+This GitLab-hosted [DR](https://gitlab.com/jean-christophe-manciot/dr) offers:
+- the latest compiled drive client
+- scripts for automated drive commands including syncing
+- the latest version of many other popular packages.
+
+Replace <os_code_name> by latest Debian code name, for instance stretch (only the latest Debian distribution is supported):
+```sh
+sudo gpg --keyserver pgpkeys.mit.edu --recv-keys DF7396D82BBA3684FCCADD4DB063838ED13997FD
+sudo bash -c 'gpg --export --armor DF7396D82BBA3684FCCADD4DB063838ED13997FD | apt-key add -'
+sudo bash -c $'echo "deb https://gitlab.com/jean-christophe-manciot/dr/raw/master/Debian <os_code_name> stable #JC Manciot\'s DR" > /etc/apt/sources.list.d/jean-christophe-manciot.list'
+sudo bash -c $'echo "deb https://gitlab.com/jean-christophe-manciot/dr/raw/master/Debian <os_code_name> unstable #JC Manciot\'s DR" > /etc/apt/sources.list.d/jean-christophe-manciot.list'
+sudo apt-get update
+sudo apt-get install drive-google
+```
+
+You may need to install Comodo RSA Domain Validation Secure Server Certificate Authority used by Gitlab. Cf. the [DR](https://gitlab.com/jean-christophe-manciot/dr) for details.
 
 ---
 ### Fedora distro.
@@ -76,29 +94,28 @@ sudo apt-get install drive
 This GitLab-hosted [PPA](https://gitlab.com/jean-christophe-manciot/ppa) offers:
 - the latest compiled drive client
 - scripts for automated drive commands including syncing
-- many other goodies.
+- the latest version of many other popular packages.
 
+Replace <os_code_name> by latest Ubuntu code name, for instance artful (only the latest Ubuntu distribution is supported):
 ```sh
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 5F0C7CD8
-sudo sh -c $'echo "deb https://gitlab.com/jean-christophe-manciot/ppa/raw/master/Ubuntu yakkety stable #JC Manciot\'s Stable PPA" >> /etc/apt/sources.list.d/jean-christophe-manciot.list'
+sudo gpg --keyserver keyserver.ubuntu.com --recv-keys DF7396D82BBA3684FCCADD4DB063838ED13997FD
+sudo bash -c 'gpg --export --armor DF7396D82BBA3684FCCADD4DB063838ED13997FD | apt-key add -'
+sudo bash -c $'echo "deb https://gitlab.com/jean-christophe-manciot/ppa/raw/master/Ubuntu <os_code_name> stable #JC Manciot\'s Stable PPA" >> /etc/apt/sources.list.d/jean-christophe-manciot.list'
+sudo bash -c $'echo "deb https://gitlab.com/jean-christophe-manciot/ppa/raw/master/Ubuntu <os_code_name> unstable #JC Manciot\'s Unstable PPA" >> /etc/apt/sources.list.d/jean-christophe-manciot.list'
 sudo apt-get update
 sudo apt-get install drive-google
 ```
 
 You may need to install Comodo RSA Domain Validation Secure Server Certificate Authority used by Gitlab. Cf. the [PPA](https://gitlab.com/jean-christophe-manciot/ppa) for details.
 
-An unstable channel also exists:
-```sh
-sudo sh -c $'echo "deb https://gitlab.com/jean-christophe-manciot/ppa/raw/master/Ubuntu yakkety unstable #JC Manciot\'s Unstable PPA" >> /etc/apt/sources.list.d/jean-christophe-manciot.list'
-```
-
 ---
 ### Packages Provided By
 
 Platform | Author |
 ---------| -------|
-[Arch Linux](https://aur.archlinux.org/packages/drive) | [Jonathan Jenkins](https://github.com/shaggytwodope)
+[Arch Linux](https://aur.archlinux.org/packages/drive-bin) | [Alex Dewar](https://github.com/alexdewar)
 [Debian Linux](http://shaggytwodope.github.io/repo) | [Jonathan Jenkins](https://github.com/shaggytwodope)
+[Automation on Debian Linux](https://gitlab.com/jean-christophe-manciot/dr) | [Jean-Christophe Manciot](https://gitlab.com/jean-christophe-manciot)
 [Fedora Linux](https://copr.fedorainfracloud.org/coprs/vaughan/drive-google/) | [Vaughan Agrez](https://github.com/agrez)
 [openSUSE Linux]() | [Grant Rostig](https://github.com/grantrostig)
 [Ubuntu Linux](https://launchpad.net/~twodopeshaggy/+archive/ubuntu/drive) | [Jonathan Jenkins](https://github.com/shaggytwodope)
